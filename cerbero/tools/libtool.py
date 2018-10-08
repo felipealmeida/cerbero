@@ -119,6 +119,7 @@ libdir='%(libdir)s'
         self.libdir = libdir
         self.laname = '%s.la' % libname
         dlname_base = '%s.%s' % (libname, shared_ext)
+
         dlname = dlname_base
         dlname_all = dlname_base
         major_str = ''
@@ -134,6 +135,12 @@ libdir='%(libdir)s'
                 if micro is not None:
                     dlname_all = '%s.%s' % (dlname_all, micro)
                     micro_str = micro
+
+        if static_only:
+            dlname = ''
+            dlname_all = ''
+            dlname_base = ''
+
         old_library = '%s.a' % libname
         self.change_value('libname', self.laname)
         if not static_only:
