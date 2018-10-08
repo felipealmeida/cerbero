@@ -130,6 +130,7 @@ libtool-parse-lib = \
   $(if $(__tmpvar), \
     $(call libtool-parse-file,$(__tmpvar),$(call libtool-name-from-filepath,$(__tmpvar))),\
     $(eval __libtool.link.shared_libs += $1)\
+    $(eval __libtool_libs.processed += $1)\
     $(call __libtool_log, libtool file not found for "$1" and will be added to the shared libs)\
   )
 
@@ -168,7 +169,13 @@ libtool-parse-file = \
     $(call __libtool_log, $2.deps = $(__libtool_libs.$2.DEPS)) \
     $(eval __libtool_libs.processed += $2) \
     $(call __libtool_log, parsed libraries: $(__libtool_libs.processed))\
-    $(foreach library,$(__libtool_libs.$2.DEPS), $(call libtool-parse-lib,$(library)))\
+    $(foreach library,$(__libtool_libs.$2.DEPS), \
+      $(if $(call libtool-lib-processed,$(library)),,$(call libtool-parse-lib,$(library))))\
+    $(foreach library,$(__libtool_libs.$2.LIBS), \
+      $(call __libtool_log, Process lib: $(library))\
+      $(if $(call libtool-lib-processed,$(library)),,\
+	$(call libtool-parse-lib,$(library))\
+        $(call __libtool_log, (after LIB) ordered list of libraries: $(__libtool_libs.ordered))))\
     $(eval __libtool_libs.ordered += $2)\
     $(call __libtool_log, ordered list of libraries: $(__libtool_libs.ordered))\
   )
@@ -225,11 +232,6 @@ libtool-get-all-libs = \
   $(eval __tmpvar.libs := $(empty))\
   $(foreach library,$(__libtool_libs.ordered),\
     $(eval __tmpvar.static_libs_reverse += $(__libtool_libs.$(library).STATIC_LIB))\
-    $(foreach dylib,$(__libtool_libs.$(library).LIBS),\
-      $(if $(findstring $(dylib), $(__tmpvar.libs)), ,\
-        $(eval __tmpvar.libs += $(dylib))\
-      )\
-    )\
   )\
   $(foreach path,$(__tmpvar.static_libs_reverse),\
     $(eval __tmpvar.static_libs := $(path) $(__tmpvar.static_libs))\
