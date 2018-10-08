@@ -1,0 +1,39 @@
+From ae8b3084d3c31a62a89cccda404568c74a07eeb1 Mon Sep 17 00:00:00 2001
+From: Felipe Magno de Almeida <felipe@expertisesolutions.com.br>
+Date: Tue, 26 Jun 2018 16:08:16 -0300
+Subject: [PATCH] Make gmodule and glib compile both statically and shared
+
+---
+ glib/meson.build    | 2 +-
+ gmodule/meson.build | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/glib/meson.build b/glib/meson.build
+index ea9bf41..23b08e3 100644
+--- a/glib/meson.build
++++ b/glib/meson.build
+@@ -227,7 +227,7 @@ if use_pcre_static_flag
+   pcre_static_args = ['-DPCRE_STATIC']
+ endif
+ 
+-libglib = library('glib-2.0',
++libglib = both_libraries('glib-2.0',
+   glib_dtrace_obj, glib_dtrace_hdr,
+   sources : [deprecated_sources, glib_sources],
+   version : library_version,
+diff --git a/gmodule/meson.build b/gmodule/meson.build
+index 3b57fb4..b23bfae 100644
+--- a/gmodule/meson.build
++++ b/gmodule/meson.build
+@@ -95,7 +95,7 @@ if host_system == 'windows'
+   gmodule_sources += [gmodule_win_res]
+ endif
+ 
+-libgmodule = library('gmodule-2.0',
++libgmodule = both_libraries('gmodule-2.0',
+   sources : gmodule_sources,
+   version : library_version,
+   soversion : soversion,
+-- 
+2.18.0
+

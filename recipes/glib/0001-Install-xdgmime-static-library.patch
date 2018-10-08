@@ -1,0 +1,23 @@
+From a03f2553812f1de241f3f1d2988ba291bfd24bcd Mon Sep 17 00:00:00 2001
+From: Felipe Magno de Almeida <felipe@expertisesolutions.com.br>
+Date: Thu, 28 Jun 2018 23:00:05 -0300
+Subject: [PATCH] Install xdgmime static library
+
+Needed for statically compiling with libgio
+---
+ gio/xdgmime/meson.build | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/gio/xdgmime/meson.build b/gio/xdgmime/meson.build
+index d107f71..37fc37f 100644
+--- a/gio/xdgmime/meson.build
++++ b/gio/xdgmime/meson.build
+@@ -13,4 +13,5 @@ xdgmime_lib = static_library('xdgmime',
+   sources : xdgmime_sources,
+   include_directories : [configinc],
+   pic : true,
++  install : true,
+   c_args : [ '-DXDG_PREFIX=_gio_xdg' ] + glib_hidden_visibility_args)
+-- 
+2.18.0
+

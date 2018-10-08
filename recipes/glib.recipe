@@ -30,7 +30,7 @@ class Recipe(recipe.Recipe):
     licenses = [License.LGPLv2Plus]
     btype = BuildType.MESON
     meson_options = {'gtk_doc': 'false', 'internal_pcre': 'true', 'libmount': 'false',
-                     'dtrace': 'false'}
+                     'dtrace': 'false', 'verbose': 'true'}
     deps = ['libffi', 'zlib']
 
     patches = ["glib/0003-Add-support-for-loading-GIO-modules-from-the-distro-.patch",
@@ -55,11 +55,21 @@ class Recipe(recipe.Recipe):
                'glib/0001-meson-Add-macOS-libtool-versioning-to-maintain-ABI-c.patch',
                # https://gitlab.gnome.org/GNOME/glib/merge_requests/273
                'glib/0001-gtlsbackend-add-support-for-setting-the-default-TLS-.patch',
+               # Compile statically too
+               'glib/0001-Make-gobject-compile-both-statically-and-shared.patch',
+               'glib/0001-Make-gmodule-and-glib-compile-both-statically-and-sh.patch',
+               'glib/0001-Install-pcre-static-library.patch',
+               'glib/0001-Install-gnulib-static-library.patch',
+               'glib/0001-Install-libcharset-static-library.patch',
+               'glib/0001-Make-gio-link-statically-and-shared.patch',
+               'glib/0001-Install-xdgmime-static-library.patch',
+               'glib/0001-Disable-inotify-for-now.patch',
+               'glib/0001-Link-statically-and-shared-gthread-2.0.patch',
               ]
 
     files_libs = [
         'libglib-2.0', 'libgio-2.0', 'libgmodule-2.0', 'libgobject-2.0',
-        'libgthread-2.0']
+        'libgthread-2.0', 'libpcre', 'libgnulib', 'libxdgmime']
     files_bins = ['gsettings', 'gdbus', 'gio-querymodules', 'glib-compile-schemas']
     platform_files_schemas = {
         Platform.WINDOWS: ['share/glib-2.0/schemas'],
@@ -212,6 +222,33 @@ class Recipe(recipe.Recipe):
             self._set_gio_flags(path1, path2, use_old_uri_scheme)
 
     def post_install(self):
+        libtool_gobject_la = LibtoolLibrary('libgobject-2.0', 2, 56, 1, self.config.libdir,
+                                            self.config.target_platform, ['libglib-2.0'])
+        libtool_gobject_la.save()
+        libtool_gthread_la = LibtoolLibrary('libgthread-2.0', 2, 56, 1, self.config.libdir,
+                                            self.config.target_platform, ['libglib-2.0'])
+        libtool_gthread_la.save()
+        libtool_gmodule_la = LibtoolLibrary('libgmodule-2.0', 2, 56, 1, self.config.libdir,
+                                            self.config.target_platform, ['libglib-2.0'])
+        libtool_gmodule_la.save()
+        libtool_glib_la = LibtoolLibrary('libglib-2.0', 2, 56, 1, self.config.libdir,
+                                         self.config.target_platform, ['libpcre', 'libgnulib', 'libcharset', 'libffi', 'libiconv'])
+        libtool_glib_la.save()
+        libtool_pcre_la = LibtoolLibrary('libpcre', 2, 56, 1, self.config.libdir,
+                                         self.config.target_platform, None, True)
+        libtool_pcre_la.save()
+        libtool_gnulib_la = LibtoolLibrary('libgnulib', 2, 56, 1, self.config.libdir,
+                                           self.config.target_platform, None, True)
+        libtool_gnulib_la.save()
+        libtool_charset_la = LibtoolLibrary('libcharset', 2, 56, 1, self.config.libdir,
+                                            self.config.target_platform, None, True)
+        libtool_charset_la.save()
+        libtool_xdgmime_la = LibtoolLibrary('xdgmime', 2, 56, 1, self.config.libdir,
+                                            self.config.target_platform, None, True)
+        libtool_xdgmime_la.save()
+        libtool_gio_la = LibtoolLibrary('gio-2.0', 2, 56, 1, self.config.libdir,
+                                        self.config.target_platform, ['libxdgmime'])
+        libtool_gio_la.save()
         if self.config.target_platform in [Platform.IOS, Platform.DARWIN]:
             # For the universal build we need to ship glibconfig.h of both
             # architectures in a subfolder and include the correct one depending

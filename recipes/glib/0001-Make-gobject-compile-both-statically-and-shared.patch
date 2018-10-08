@@ -1,0 +1,25 @@
+From 3170841681241cd51026dfdb60adf8763fc6fa7d Mon Sep 17 00:00:00 2001
+From: Felipe Magno de Almeida <felipe@expertisesolutions.com.br>
+Date: Mon, 25 Jun 2018 00:06:34 -0300
+Subject: [PATCH] Make gobject compile both statically and shared
+
+---
+ gobject/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gobject/meson.build b/gobject/meson.build
+index 1bf0e00..cc836f4 100644
+--- a/gobject/meson.build
++++ b/gobject/meson.build
+@@ -61,7 +61,7 @@ else
+   gobject_dtrace_hdr = []
+ endif
+ 
+-libgobject = library('gobject-2.0',
++libgobject = both_libraries('gobject-2.0',
+   gobject_dtrace_obj, gobject_dtrace_hdr,
+   sources : gobject_sources,
+   version : library_version,
+-- 
+2.18.0
+

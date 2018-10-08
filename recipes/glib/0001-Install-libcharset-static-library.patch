@@ -1,0 +1,23 @@
+From ef51e8a649fe00ef939425a4df3704a684712104 Mon Sep 17 00:00:00 2001
+From: Felipe Magno de Almeida <felipe@expertisesolutions.com.br>
+Date: Wed, 27 Jun 2018 00:40:20 -0300
+Subject: [PATCH] Install libcharset static library
+
+---
+ glib/libcharset/meson.build | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/glib/libcharset/meson.build b/glib/libcharset/meson.build
+index be4a790..e6a87e9 100644
+--- a/glib/libcharset/meson.build
++++ b/glib/libcharset/meson.build
+@@ -5,5 +5,6 @@ endif
+ 
+ charset_lib = static_library('charset', 'localcharset.c',
+   include_directories : configinc,
++  install : true,
+   pic : true,
+   c_args : [ '-DGLIB_CHARSETALIAS_DIR="@0@"'.format(charsetalias_dir) ] + glib_hidden_visibility_args)
+-- 
+2.18.0
+

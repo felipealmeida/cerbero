@@ -1,0 +1,24 @@
+From 4454f86996548474dcc178607fb2b83f175d7547 Mon Sep 17 00:00:00 2001
+From: Felipe Magno de Almeida <felipe@expertisesolutions.com.br>
+Date: Wed, 27 Jun 2018 00:11:53 -0300
+Subject: [PATCH] Install pcre static library
+
+---
+ glib/pcre/meson.build | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/glib/pcre/meson.build b/glib/pcre/meson.build
+index 5152ecd..9be7333 100644
+--- a/glib/pcre/meson.build
++++ b/glib/pcre/meson.build
+@@ -25,6 +25,7 @@ pcre_sources = [
+ libpcre = static_library('pcre',
+   sources : [pcre_sources],
+   include_directories : [configinc, glibinc],
++  install : true,
+   pic : true,
+   c_args : [
+     '-DG_LOG_DOMAIN="GLib-GRegex"',
+-- 
+2.18.0
+

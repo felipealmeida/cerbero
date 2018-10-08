@@ -1,0 +1,25 @@
+From 183e430f07c3f9fe3207b7e9aeff4882ab24f58a Mon Sep 17 00:00:00 2001
+From: Felipe Magno de Almeida <felipe@expertisesolutions.com.br>
+Date: Thu, 28 Jun 2018 23:30:05 -0300
+Subject: [PATCH] Link statically and shared gthread-2.0
+
+---
+ gthread/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gthread/meson.build b/gthread/meson.build
+index 3787dba..e323f12 100644
+--- a/gthread/meson.build
++++ b/gthread/meson.build
+@@ -12,7 +12,7 @@ if host_system == 'windows'
+   gthread_sources += [gthread_win_res]
+ endif
+ 
+-libgthread = library('gthread-2.0',
++libgthread = both_libraries('gthread-2.0',
+   sources : gthread_sources,
+   version : library_version,
+   soversion : soversion,
+-- 
+2.18.0
+
