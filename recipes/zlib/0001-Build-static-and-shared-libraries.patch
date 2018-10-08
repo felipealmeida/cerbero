@@ -1,0 +1,25 @@
+From 31b4aec1fc30c83a55d976f708498c4833e31e9d Mon Sep 17 00:00:00 2001
+From: Felipe Magno de Almeida <felipe@expertisesolutions.com.br>
+Date: Sun, 24 Jun 2018 23:48:37 -0300
+Subject: [PATCH] Build static and shared libraries
+
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 34819bb..594c69a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -17,7 +17,7 @@ src = ['adler32.c', 'crc32.c', 'deflate.c', 'infback.c', 'inffast.c', 'inflate.c
+ 
+ headers = ['zconf.h', 'zlib.h']
+ 
+-zlib = library('z', src,
++zlib = both_libraries('z', src,
+   c_args : ['-DZLIB_DLL'],
+   link_args : link_args,
+   install : true,
+-- 
+2.18.0
+
